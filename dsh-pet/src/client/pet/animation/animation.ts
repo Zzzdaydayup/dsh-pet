@@ -204,7 +204,14 @@ export function createOwnAnimation(deps: OwnAnimationDeps): OwnAnimation {
       const outgoing = elementOf(front);
       el.classList.add('is-front');
       if (outgoing !== null && outgoing !== el) {
-        outgoing.classList.remove('is-front');
+        // [sharkpig] __sharkpigDeferredHide：旧帧先留着，等新视频真正渲染出一帧再撤，
+        // 否则新元素会露出 1~2 帧空表面（浅色角色表现为"白闪"）。
+        const leaving = outgoing;
+        if (typeof el.requestVideoFrameCallback === 'function') {
+          el.requestVideoFrameCallback(() => leaving.classList.remove('is-front'));
+        } else {
+          leaving.classList.remove('is-front');
+        }
         // 降级为背景的视频若继续播完，残留的 onended 会掐断当前前台动画：清 handler 并停播。
         outgoing.onended = null;
         outgoing.onerror = null;

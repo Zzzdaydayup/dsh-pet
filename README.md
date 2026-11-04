@@ -1,3 +1,5 @@
+> **This fork** adds 3 fixes to dsh-pet 0.4.1 (animation-switch white flash / stuck work-status / clicks cannot interrupt), with dsh-pet/lib/ build output committed for git installs. Look for [sharkpig] comments in the source.
+
 # dsh-pet 🐾
 
 <p align="center">

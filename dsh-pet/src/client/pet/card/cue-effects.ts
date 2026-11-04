@@ -150,10 +150,31 @@ export function createCueEffects(rt: CueEffectsRuntime) {
       const terminal = workStatus.state === 'success' || workStatus.state === 'error';
       // 只在状态变化时点亮或收起气泡：同状态后续 tick 不重新点亮已自动收起的终态气泡。
       if (stateChanged) hub.bubbles.lightWork(terminal);
+      if (stateChanged) (window as any).__dshPetWsHold = 0; // [sharkpig] 状态真变了，恢复接管
       // 循环语义：终态播一遍；非终态单候选无限循环，多候选播一遍后由播完判定轮换。
       const rotating = !terminal && Array.isArray(slot) && slot.length > 1;
       card.actions.setOnce(terminal || rotating);
       card.actions.setAnim(name);
+      // [sharkpig] 非终态卡住 60s：收起气泡并回落待机，避免气泡常驻 + 动画死循环
+      const w = window as any;
+      if (w.__dshPetWsWatch) {
+        window.clearTimeout(w.__dshPetWsWatch);
+        w.__dshPetWsWatch = null;
+      }
+      if (!terminal) {
+        const watched = workStatus.state;
+        w.__dshPetWsWatch = window.setTimeout(() => {
+          w.__dshPetWsWatch = null;
+          const cur = workStatusRef.current;
+          if (!cur || cur.state !== watched) return;
+          if (cur.state === 'success' || cur.state === 'error') return;
+          w.__dshPetWsHold = Date.now();
+          hub.bubbles.hideWork();
+          card.actions.setOnce(true);
+          if (hub.anims().idle.length) card.actions.setAnim(pick(hub.anims().idle, card.animRef.current));
+          card.actions.bumpSeq();
+        }, 60000);
+      }
     };
 
     /** 说话（碎碎念、命令气泡、对话回复、清空）：序号变化即执行清空或弹气泡。 */

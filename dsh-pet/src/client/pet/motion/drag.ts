@@ -441,6 +441,7 @@ export function createDrag(card: () => DragCard): Drag {
     // 点击音效放在所有「不播点击动画」的早退分支之后。
     c.playClickSound();
     c.setOnce(true);
+    (window as any).__dshPetWsHold = Date.now(); // [sharkpig] 互动优先
     if (!c.clickAnims.length) return;
     const name = pick(c.clickAnims);
     log(c.petId, '-> [CLICK] ' + name);

@@ -17,7 +17,7 @@ const PET_CSS = [
   '.dsh-pet-root[data-corner="top-left"]{left:var(--dsh-pet-mx,24px);top:var(--dsh-pet-my,0)}',
   '.dsh-pet-stage{position:relative;width:var(--dsh-pet-size,462px);height:calc(var(--dsh-pet-size,462px)*9/16);pointer-events:none}',
   // 与桌面 helper 同一条修正，滤镜定义见 ensureAlphaFilter。
-  '.dsh-pet-video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;opacity:0;transition:opacity .18s ease;transform-origin:center;filter:url(#dsh-pet-alpha-fix)}',
+  '.dsh-pet-video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;opacity:0;transition:none;transform-origin:center;filter:url(#dsh-pet-alpha-fix)}',
   '.dsh-pet-video.is-front{opacity:1}',
   // 触屏拖拽必需：缺 touch-action:none 时浏览器会把手势判成滚动并触发 pointercancel；
   // 两条 -webkit-* 抑制长按选中与 iOS 长按系统菜单。

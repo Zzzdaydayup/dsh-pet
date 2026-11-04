@@ -80,6 +80,8 @@ export function createAnimationFlow(rt: AnimationFlowRuntime) {
       if (hub.ownAnim.isFrozen()) return false;
       // 睡觉期间不恢复档位动画：工作状态照旧在跑，但睡着就是不看不听。
       if (sleeping()) return false;
+      // [sharkpig] 用户刚点过：5 分钟内不让工作状态抢回动画
+      if ((window as any).__dshPetWsHold && Date.now() - (window as any).__dshPetWsHold < 300000) return false;
       const ws = workStatusRef.current;
       if (!ws || !ws.state || ws.state === 'success' || ws.state === 'error') return false;
       const pool = hub.anims().events?.workStatus;
