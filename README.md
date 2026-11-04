@@ -1,4 +1,15 @@
-> **This fork** adds 3 fixes to dsh-pet 0.4.1 (animation-switch white flash / stuck work-status / clicks cannot interrupt), with dsh-pet/lib/ build output committed for git installs. Look for [sharkpig] comments in the source.
+> **This fork** (Zzzdaydayup) ships dsh-pet **0.4.1-sharkpig.1** with three fixes built in:
+> 1. no white flash when switching animations,
+> 2. stuck work-status auto-recovers (60s watchdog),
+> 3. clicks can interrupt work-status animations.
+>
+> Look for `[sharkpig]` comments in `dsh-pet/src/client/pet/**`.
+>
+> **Install (recommended):** download `dsh-pet-0.4.1-sharkpig.1.tgz` from this repo's Releases, then
+> `dsh plugin --profile web add <path-to-tgz>`
+>
+> Installing straight from git (`github:Zzzdaydayup/dsh-pet`) is **not enough**: the repo does not carry
+> `dsh-pet/assets/` (61 MB of webm/fonts/memes), so the packaged plugin would be incomplete.
 
 # dsh-pet 🐾
 
