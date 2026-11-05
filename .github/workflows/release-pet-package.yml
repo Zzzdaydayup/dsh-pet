@@ -1,0 +1,53 @@
+name: release-pet-package
+
+# 打 tag（v*）时自动把 dsh-pet 打成安装包，并挂到对应的 Release 上。
+# 这样不需要手工上传 85MB 的 tgz；Release 附件不计入仓库体积。
+#
+# 手动触发：仓库 Actions 页 → release-pet-package → Run workflow（会挂到最近一个 tag）
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "要挂到哪个 tag 的 Release（留空=最新 tag）"
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  pack-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Pack dsh-pet (skip prepack build)
+        working-directory: dsh-pet
+        run: |
+          set -e
+          npm pack --ignore-scripts
+          ls -lh ./*.tgz
+
+      - name: Attach tarball to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag || github.ref_name }}
+          files: dsh-pet/*.tgz
+          fail_on_unmatched_files: true
+          generate_release_notes: false
+          body: |
+            **dsh-pet + 鲨猪角色（内置三个修复）**
+
+            安装：
+            ```
+            dsh plugin --profile web add dsh-pet-<version>.tgz
+            ```
+            角色会在插件首次启动时自动安装到 `~/.dsh/dsh-pet/pet/`。
+            安装文档见仓库根目录 `INSTALL-FOR-AGENT.md`。
