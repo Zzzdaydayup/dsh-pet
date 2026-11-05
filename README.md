@@ -1,15 +1,18 @@
-> **This fork** (Zzzdaydayup) ships dsh-pet **0.4.1-sharkpig.1** with three fixes built in:
+> **This fork** (Zzzdaydayup) = dsh-pet **0.4.1-sharkpig.2** + the **鲨猪 (shark-pig)** character, with three fixes built in:
 > 1. no white flash when switching animations,
-> 2. stuck work-status auto-recovers (60s watchdog),
+> 2. stuck work-status recovers automatically (60 s watchdog),
 > 3. clicks can interrupt work-status animations.
 >
-> Look for `[sharkpig]` comments in `dsh-pet/src/client/pet/**`.
+> The character pack is bundled at `dsh-pet/assets/pets/鲨猪/` and is installed into `$DSH_HOME/dsh-pet/pet/` **on first run** (skipped if already present, never overwrites your edits).
 >
-> **Install (recommended):** download `dsh-pet-0.4.1-sharkpig.1.tgz` from this repo's Releases, then
+> **Install (one command, git):**
+> ```
+> dsh plugin --profile web add github:Zzzdaydayup/dsh-pet#path:/dsh-pet
+> ```
+> **Install (release tarball, faster):** download `dsh-pet-0.4.1-sharkpig.2.tgz` from Releases, then
 > `dsh plugin --profile web add <path-to-tgz>`
 >
-> Installing straight from git (`github:Zzzdaydayup/dsh-pet`) is **not enough**: the repo does not carry
-> `dsh-pet/assets/` (61 MB of webm/fonts/memes), so the packaged plugin would be incomplete.
+> Restart DSH afterwards. Fix markers: search `[sharkpig]` in `dsh-pet/src/client/pet/**`.
 
 # dsh-pet 🐾
 
