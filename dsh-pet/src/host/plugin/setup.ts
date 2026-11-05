@@ -148,6 +148,30 @@ export function createHostSetup(ctx: HostSetupContext): HostSetup {
   const legacyUserConfigPath = join(userRoot, 'main-config.json');
 
   const petConfigDir = join(userRoot, 'pet');
+  // [sharkpig] __sharkpigStarterPets：首次运行把随包内置角色装进用户 pet/（已存在则跳过，绝不覆盖）
+  try {
+    const starter = join(PACKAGE_ROOT, 'assets', 'pets');
+    if (existsSync(starter)) {
+      const copyTree = (s: string, d: string): void => {
+        if (statSync(s).isDirectory()) {
+          mkdirSync(d, { recursive: true });
+          for (const n of readdirSync(s)) copyTree(join(s, n), join(d, n));
+        } else {
+          mkdirSync(dirname(d), { recursive: true });
+          writeFileSync(d, readFileSync(s));
+        }
+      };
+      mkdirSync(petConfigDir, { recursive: true });
+      for (const n of readdirSync(starter)) {
+        const target = join(petConfigDir, n);
+        if (existsSync(target)) continue;
+        copyTree(join(starter, n), target);
+        log.info('[dsh-pet] 已安装内置角色：' + n);
+      }
+    }
+  } catch (err) {
+    log.warn('[dsh-pet] 内置角色安装失败：' + String(err));
+  }
 
   // 配置路径集（readAllConfig 的唯一输入：内置默认 + 用户主配置 + 文件宠物目录）
   const configPaths: ConfigPaths = {

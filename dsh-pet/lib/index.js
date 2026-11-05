@@ -2312,6 +2312,30 @@ function createHostSetup(ctx) {
 	const userConfigPath = join(userRoot, "main-config.jsonc");
 	const legacyUserConfigPath = join(userRoot, "main-config.json");
 	const petConfigDir = join(userRoot, "pet");
+	// [sharkpig] __sharkpigStarterPets：首次运行把随包内置角色装进用户 pet/（已存在则跳过，绝不覆盖）
+	try {
+		const __starter = join(PACKAGE_ROOT, "assets", "pets");
+		if (existsSync(__starter)) {
+			const __copyTree = (s, d) => {
+				if (statSync(s).isDirectory()) {
+					mkdirSync(d, { recursive: true });
+					for (const n of readdirSync(s)) __copyTree(join(s, n), join(d, n));
+				} else {
+					mkdirSync(dirname(d), { recursive: true });
+					writeFileSync(d, readFileSync(s));
+				}
+			};
+			mkdirSync(petConfigDir, { recursive: true });
+			for (const n of readdirSync(__starter)) {
+				const target = join(petConfigDir, n);
+				if (existsSync(target)) continue;
+				__copyTree(join(__starter, n), target);
+				log.info("[dsh-pet] 已安装内置角色：" + n);
+			}
+		}
+	} catch (err) {
+		log.warn("[dsh-pet] 内置角色安装失败：" + String(err));
+	}
 	const configPaths = {
 		defaultFile: join(PACKAGE_ROOT, "assets", "config.jsonc"),
 		userFile: userConfigPath,
